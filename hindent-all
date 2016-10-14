@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Format all .hs files in the current directory tree with hindent
+
+HINDENT=${HOME}/.cabal/bin/hindent
+
+function all_hs_files()
+{
+    find ./ -name dist -prune -o -name "*.hs" -print
+}
+
+for FILE in $(all_hs_files); do
+{
+    NEWFILE=${FILE}.formatted
+    cat ${FILE} | ${HINDENT} > ${NEWFILE}
+
+    if diff -q ${FILE} ${NEWFILE} >/dev/null; then
+    {
+        rm ${NEWFILE}
+    }
+    else
+    {
+        echo "hindent updated ${FILE}"
+        mv ${NEWFILE} ${FILE}
+    }; fi
+}; done
